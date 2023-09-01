@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+  <head>
+    <title>Restaurante do Zé</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width, initial-scale=1">
+    
+    <link rel="stylesheet" href="{% static 'meusite.css' %}">
+    
+    
+    
+  </head>
+  <body>
+    <div id="header">
+      <img class="icone-setas" src="{%static 'ham.jpg'%}" style="float: left; height:168px;">
+      <img class="icone-setas" src="{%static 'hot.jpg'%}" style="float: right; height:168px;">
+      <p style="color:black;font-size:150%;">Bem vindo ao restaurante do Zé.Faça sua reserva ou monte seu pedido. Não se preocupe,seu pedido fica armazenado.Você pode sair e voltar mais tarde. </p>
+      
+      <form action="{% url 'registrar' %}" method="POST">{% csrf_token %}
+        <label style="color:black;font-size:200%">Nome do pedido:</label>
+        <input type="text" name="usuario" required>
+        <input  type="submit" name="res" value="salvar">
+        <span >{{mensagem}}</span>
+      </form>
+      
+      
+      <a style="color:black;font-size:150%" href="#" class="botao-principal"><a style="color:black;font-size:150%;float: right;" href="{% url 'sair' %}">Sair do pedido</a></span></a>
+      <a style="color:black;font-size:150%" href="{% url 'deletar' %}">Cancelar seu pedido</a>
+    </div>
+    
+    <div id="left">
+      <br>
+      <br>
+      
+        <br>
+        <p style="color:blue;">Faça sua reserva</p>
+        <form action="{% url 'reserva' %}" method="POST">{% csrf_token %}
+          <label>Seu nome</label>
+          <input type="text" name="nome" required>
+          <br>
+          <label>Horario</label>
+          <select name="horario" class="form-select" required>
+            <option value="MN">Manhã</option>
+            <option value="TR">Tarde</option>
+            <option value="NO">Noite</option>
+          </select>
+          <br>
+          <label>Local</label>
+          <select name="local" class="form-select" required>
+            <option value="PR">Perifeira</option>
+            <option value="CN">Centro</option>
+            </select>
+            <br>
+            <label>Dia</label>
+            <input type="number" name="dia" required>
+            <br>
+            <input  type="submit" name="reservar" value="reservar">
+            <br>
+            <input  type="submit" name="cancelar" value="cancelar">
+        </form>
+        <p>{{mensagem}}</p>
+        {% if reservas %}
+          
+            <p>Sua reserva foi feita para {{reservas.nome}}, dia {{reservas.data_reserva}}, no local {{reservas.get_locais_display}}, no periodo da {{reservas.get_horarios_display}}</p>
+            
+        {% endif %}
+        <br>
+        <h1 style="color:blue;">Aqui está o pedido {{mensagem3}} e o total a pagar</h1>
+    <!-- <a href="{% url 'voltar' %}">Voltar ao menu</a> -->
+    <p style="color:blue;">O total do pedido é: {{preco}}</p>
+    {% if lista %}
+    {% for prato,num in carro.items %}
+    <p>{{prato}}--quantidade:{{num}}<span><a href="{% url 'retirar' pratos=prato %}"><img src="{%static 'cancel.png'%}" class="media-object  img-responsive img-thumbnail" style="width:20; height:20px;"></a></span></p>
+    <!-- <a href="{% url 'retirar' pratos=prato %}"><img src="{%static 'cancel.png'%}" class="media-object  img-responsive img-thumbnail" style="float: left;width:30; height:30px;"></a> -->
+    {% endfor %}
+    {% endif %}
+        
+        </div>
+    <div id="right">
+      <h1>Pratos principais</h1>
+      <p>{{mensagem2}}</p>
+      <p>escolha quais dos pratos principais gostaria de por no pedido</p>
+      <img class="icone-setas" src="{%static 'ham2.jpg'%}">
+      <p>Hamburguer  Preço: 20</p>
+      <a href="{% url 'ham' %}">Adicionar ao pedido</a>
+      <br>
+      <br>
+      <img class="icone-setas" src="{%static 'fritas.jpg'%}">
+      <p>Fritas  Preço: 15</p>
+      
+      <a href="{% url 'fritas' %}">Adicionar ao pedido</a>
+      <br>
+      <br>
+      <img class="icone-setas" src="{%static 'coca.jpg'%}">
+      <p>Coca  Preço: 10</p>
+      <a href="{% url 'coca' %}">Adicionar ao pedido</a>
+      <h2>Adicionar um prato ao cardapio</h2>
+      <form action="{% url 'adicionar_prato' %}" method="POST">{% csrf_token %}
+        <label>nome do prato</label>
+        <input type="text" name="nome_prato" required>
+        <br>
+        <label>preco do prato</label>
+        
+        <input type="number" name="preco_prato" required>
+        <br>
+        <input  type="submit" name="add" value="adicionar prato ao cardápio">
+      </form>
+      <p>{{prato}}</p>
+      <h2>Veja nossos outros pratos: <span><a href="{% url 'menu' %}">Menu</a></span></h2>
+      <p>{{vazio}}</p>
+      <p>{{mensagem}}</p>
+        {% if menu %}
+        {% for pratos, pre in menu.items %}
+        {% if pratos != 'hamburguer' and pratos != 'fritas' and  pratos != 'coca'%}
+        <p>{{pratos}} Preço: {{pre}}</p>
+        <a href="{% url 'prato_pedido' prato=pratos %}">Adicionar ao pedido</a>
+        <a href="{% url 'retirar_prato' prato=pratos %}">Retirar prato do cardapio</a>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        
+      </div>
+      
+      <div id="footer">
+        <P style="color:blue;font-size:150%;">Contato: restaurante@email.com (12) 9999-9999</P>
+      </div>
+    
+  </body>
+</html>

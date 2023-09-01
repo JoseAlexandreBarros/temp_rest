@@ -1,0 +1,38 @@
+#header{
+    height : 168px;
+    width: 100%;
+    background-color: green;
+    margin: 0;
+    padding: 0;
+}
+
+.button{
+    background-color: white;
+    height: 50px;
+	width: 100px;
+}
+
+#left{
+    float: left;
+    width:20%
+}
+
+#right{
+    color: blue;
+    float: right;
+    width: 80%;
+}
+
+img[src=""]{display:none;}
+
+body{
+    background-color: yellow;
+    
+}
+
+#footer{
+    width: 100%;
+    bottom: 0;
+    clear: both;
+}
+
